@@ -1,0 +1,16 @@
+<launch>
+
+    <arg name="world" default="example"/>
+    <arg name="robot_name" default="robot_rodeo_gym"/>
+    <arg name="ign_args" default=""/>
+
+    <param name="/use_sim_time" value="true"/>
+
+    <!-- Launch gazebo -->
+    <include file="$(find ros_ign_gazebo)/launch/ign_gazebo.launch">
+        <arg name="ign_args" value="-r -v 4 $(find robot_rodeo_gym)/worlds/robot_rodeo_gym_world.sdf"/>
+    </include>
+    <!-- Simulator time bridge -->
+    <node pkg="ros_ign_bridge" type="parameter_bridge" name="$(anon ros_ign_bridge)" args="/clock@rosgraph_msgs/Clock[ignition.msgs.Clock"/>
+
+</launch>
