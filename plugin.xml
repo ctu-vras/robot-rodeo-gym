@@ -1,0 +1,17 @@
+<library path="lib/librqt_score">
+    <class name="robot_rodeo_gym/RqtScore" type="robot_rodeo_gym::RqtScore" base_class_type="rqt_gui_cpp::Plugin">
+        <description>
+            A GUI plugin to control Robot Rodeo Gym .
+        </description>
+        <qtgui>
+            <group>
+                <label>Visualization</label>
+                <icon type="theme">folder</icon>
+                <statustip>Plugins related to visualization.</statustip>
+            </group>
+            <label>Robot Rodeo Gym Score</label>
+            <icon type="theme">image-x-generic</icon>
+            <statustip>A GUI plugin for viewing sensor_msgs/Image topics.</statustip>
+        </qtgui>
+    </class>
+</library>

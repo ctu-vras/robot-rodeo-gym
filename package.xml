@@ -20,5 +20,10 @@
   <depend>gazebo_plugins</depend>
   <depend>gazebo_ros</depend>
   <depend>gazebo_ros_control</depend>
+  <depend>rqt_gui</depend>
+  <depend>rqt_gui_cpp</depend>
 
+  <export>
+    <rqt_gui plugin="${prefix}/plugin.xml"/>
+  </export>
 </package>
