@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="world_name" default="empty"/>
+    <arg name="robot_name" default="unknown"/>
+    <arg name="frame_name" default="base_link"/>
+
+    <!-- Publish robot ground truth transformation to the map frame -->
+    <node pkg="robot_rodeo_gym" type="ground_truth_publisher" respawn="true"
+      name="robot_rodeo_gym_ground_truth_publisher" output="screen">
+        <param name="world_name" value="$(arg world_name)"/>
+        <param name="robot_name" value="$(arg robot_name)"/>
+        <param name="frame_name" value="$(arg frame_name)"/>
+        <param name="publish_rate" value="20"/>
+    </node>
+</launch>

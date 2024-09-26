@@ -1,0 +1,9 @@
+length_in_x: 3
+length_in_y: 3
+position_x: -1.5
+position_y: -1.5
+resolution: 0.025
+min_variance: 0.0001
+max_variance: 10000.0
+mahalanobis_distance_threshold: 2.5
+multi_height_noise: 0.00002

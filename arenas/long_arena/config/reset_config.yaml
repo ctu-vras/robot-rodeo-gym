@@ -1,0 +1,11 @@
+robot_id: 151
+origin:
+  position:
+    x: -6
+    y: -4
+    z: 0.12
+  orientation:
+    x: 0
+    y: 0
+    z: 0
+    w: 1

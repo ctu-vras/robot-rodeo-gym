@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="robot" default="marv" />
+    <arg name="rate" default="1.0" />
+    <arg name="tf_prefix" value="$(arg robot)/" if="$(eval robot != '')" />
+
+    <arg name="file_name" default="$(dirname)/../config/filters.yaml"/>
+
+    <node name="laser_filter" pkg="sensor_filters" type="pointcloud2_filter_chain" required="true">
+        <rosparam command="load" file="$(arg file_name)" subst_value="true" />
+        <remap from="~input" to="points" />
+        <remap from="~output" to="points_filtered" />
+    </node>
+</launch>
+

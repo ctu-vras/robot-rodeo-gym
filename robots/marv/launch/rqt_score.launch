@@ -1,0 +1,9 @@
+<launch>
+
+    <arg name="rqt_score_node_name" default="robot_rodeo_gym_rqt_score"/>
+
+    <node pkg="robot_rodeo_gym" type="marv_rqt_score" name="$(arg rqt_score_node_name)" args="$(arg rqt_score_node_name)" output="screen">
+        <rosparam command="load" file="$(dirname)/../config/rqt_score_config.yaml" />
+    </node>
+
+</launch>

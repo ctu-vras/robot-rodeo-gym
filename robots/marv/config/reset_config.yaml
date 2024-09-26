@@ -1,0 +1,9 @@
+front_left_pos_cmd_topic_name: "/flippers_cmd_pos/front_left"
+front_right_pos_cmd_topic_name: "/flippers_cmd_pos/front_right"
+rear_left_pos_cmd_topic_name: "/flippers_cmd_pos/rear_left"
+rear_right_pos_cmd_topic_name: "/flippers_cmd_pos/rear_right"
+set_entity_pose_topic_name: "/set_entity_pose/set_entity_pose"
+front_left_pos_zero: 0
+front_right_pos_zero: 0
+rear_left_pos_zero: 0
+rear_right_pos_zero: 0

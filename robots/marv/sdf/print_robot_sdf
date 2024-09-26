@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -e
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+"${DIR}/replace_string.py" "$DIR/marv_model.sdf" "$DIR/marv_model_tmp.sdf" "#{path}" "$DIR/.."
+
+cat "$DIR/marv_model_tmp.sdf"
+
+rm "$DIR/marv_model_tmp.sdf"

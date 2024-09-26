@@ -1,0 +1,4 @@
+std_msgs/String robot_name
+geometry_msgs/Vector3 offset
+---
+bool success

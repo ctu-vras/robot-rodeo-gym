@@ -1,0 +1,3 @@
+#!/bin/bash
+
+rqt --standalone robot_rodeo_gym --args "$@"

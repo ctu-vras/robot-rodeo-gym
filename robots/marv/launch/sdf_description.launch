@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="name" default=""/>
+
+  <param name="robot_sdf_description" command="$(dirname)/../sdf/print_robot_sdf" />
+</launch>
+

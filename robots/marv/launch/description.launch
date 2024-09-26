@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="name" default=""/>
+
+  <param name="robot_description" command="$(dirname)/../urdf/print_robot_urdf name:=$(arg name)" />
+</launch>
+

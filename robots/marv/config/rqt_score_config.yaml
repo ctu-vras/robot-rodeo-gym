@@ -1,0 +1,10 @@
+imu_topic: "/imu/data"
+joy_topic: "/joy"
+distance_from_ground_topic: "/distance_from_ground"
+obstacle_id_topic: "/obstacle_id"
+
+topic_timeout: 0.3 # 300 ms
+follow_offset:
+  x: 0
+  y: 2
+  z: 1

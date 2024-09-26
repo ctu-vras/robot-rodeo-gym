@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="world" default="robot_rodeo_gym"/>
+    <arg name="robot_name" default="marv"/>
+    <arg name="ign_args" default=""/>
+    <arg name="arena_name" default="short"/>
+
+    <param name="/use_sim_time" value="true"/>
+
+    <!-- Launch gazebo arena -->
+    <!--<include file="$(find robot_rodeo_gym)/arenas/short/launch/start_robot_rodeo_gym.launch">-->
+    <include file="$(find robot_rodeo_gym)/arenas/$(arg arena_name)_arena/launch/start_robot_rodeo_gym.launch">
+        <arg name="world" value="$(arg world)"/>
+        <arg name="robot_name" value="$(arg robot_name)"/>
+    </include>
+
+    <!-- Launch ground truth publisher -->
+    <include file="$(find robot_rodeo_gym)/launch/gazebo_bridge/ground_truth_publisher.launch">
+        <arg name="world_name" value="$(arg world)"/>
+        <arg name="robot_name" value="$(arg robot_name)"/>
+        <arg name="frame_name" value="base_link"/>
+    </include>
+
+    <!-- Launch Pose relays, TF relays, joint publisher, cmd_vel subscriber -->
+    <include file="$(find robot_rodeo_gym)/robots/marv/launch/base.launch">
+        <arg name="name" value="$(arg robot_name)"/>
+        <arg name="world_name" value="$(arg world)"/>
+    </include>
+
+    <!-- Bridge for lidar from gazebo to ROS -->
+    <include file="$(find robot_rodeo_gym)/launch/gazebo_bridge/lidar_3d.launch">
+        <arg name="gazebo_topic"
+             value="/world/$(arg world)/model/$(arg robot_name)/link/laser/sensor/laser/scan/points"/>
+    </include>
+    <include file="$(find robot_rodeo_gym)/robots/marv/launch/lidar_3d_filter.launch">
+        <arg name="robot" value="$(arg robot_name)"/>
+    </include>
+    <node pkg="robot_rodeo_gym" name="point_cloud_cropping" type="crop_pointcloud" args="/points /points_cropped -100 -100 -5 100 100 0.5"/>
+
+    <!-- Bridge for imu from gazebo to ROS -->
+    <include file="$(find robot_rodeo_gym)/launch/gazebo_bridge/imu.launch">
+        <arg name="gazebo_topic" value="/world/$(arg world)/model/$(arg robot_name)/link/imu/sensor/imu/imu"/>
+    </include>
+
+    <!-- Bridge for flippers controllers from gazebo to ROS -->
+    <include file="$(find robot_rodeo_gym)/robots/marv/launch/flipper_controllers.launch">
+        <arg name="robot_name" value="$(arg robot_name)"/>
+        <arg name="world" value="$(arg world)"/>
+    </include>
+
+    <!-- Load the URDF into the ROS Parameter Server for state publisher -->
+    <include file="$(find robot_rodeo_gym)/robots/marv/launch/description.launch"/>
+    <!-- Publish transformation of the robot based on robot_description parameter -->
+    <node name="state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true">
+        <remap from="joint_states" to="joint_state" /> <!-- publishing track joint states doesn't make much sense -->
+    </node>
+
+    <!-- Load sdf model to parameter robot_sdf_description for gazebo spawner -->
+    <include file="$(find robot_rodeo_gym)/robots/marv/launch/sdf_description.launch"/>
+    <!-- Spawn robot in gazebo from robot_sdf_description parameter -->
+
+    <node   pkg="ros_ign_gazebo"
+            type="create"
+            name="test"
+            output="screen"
+            args="-world $(arg world) -param robot_sdf_description -name $(arg robot_name) -allow_renaming true -x -6 -y -4 -z 0.12">
+    </node>
+
+    <!-- Elevation Mapping -->
+    <include file="$(find robot_rodeo_gym)/robots/marv/launch/elevation_mapping.launch"/>
+
+    <!-- Teleop -->
+    <!-- TODO Add marv teleop -->
+
+    <!-- Flipper controller for distance from ground -->
+    <node name="marv_compute_distance_from_ground" pkg="robot_rodeo_gym" type="marv_compute_distance_from_ground" respawn="true" respawn_delay="5"/>
+
+    <!-- Set entity pose -->
+    <node name="set_entity_pose" pkg="robot_rodeo_gym" type="set_entity_pose" respawn="true" respawn_delay="5">
+        <param name="world_name" value="$(arg world)"/>
+    </node>
+
+    <node name="set_camera_follow" pkg="robot_rodeo_gym" type="set_camera_follow" respawn="true" output="screen"/>
+
+    <include file="$(find robot_rodeo_gym)/robots/marv/launch/rqt_score.launch">
+        <arg name="rqt_score_node_name" value="$(arg robot_name)_rqt_score"/>
+    </include>
+
+    <node pkg="robot_rodeo_gym" name="reset_robot" type="marv_reset_robot" output="screen">
+        <rosparam command="load" file="$(find robot_rodeo_gym)/arenas/$(arg arena_name)_arena/config/reset_config.yaml" />
+        <rosparam command="load" file="$(find robot_rodeo_gym)/robots/marv/config/reset_config.yaml" />
+        <param name="robot_name" value="$(arg robot_name)"/>
+    </node>
+</launch>
