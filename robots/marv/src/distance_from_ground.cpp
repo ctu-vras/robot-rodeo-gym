@@ -49,18 +49,16 @@ void height_map_callback(grid_map_msgs::GridMapConstPtr grid_map) {
 
     grid_map::Position pos;
 
-    visualization_msgs::MarkerArray markers, markers_whole;
+    visualization_msgs::MarkerArray markers;
     visualization_msgs::Marker marker;
 
     double step_size = 0.05;
 
     auto l = gm.getLength();
-    //ROS_INFO_STREAM_NAMED2(node_name, "Grid map length x: " << l.x() << ", y: " << l.y());
 
     Eigen::Affine3d transform, os, offset;
     get_transform("world", "base_link", transform);
     get_transform("os_sensor", "world", os);
-
 
     double min_dist = -std::numeric_limits<double>::max();
 
@@ -75,8 +73,15 @@ void height_map_callback(grid_map_msgs::GridMapConstPtr grid_map) {
             try {
                 double z = gm.atPosition("elevation_inpainted", pos);
 
-                if(!std::isnan(z) && z > min_dist) {
-                    min_dist = z;
+                Eigen::Affine3d p;
+                p.translation().x() = pos.x();
+                p.translation().y() = pos.y();
+                p.translation().z() = z;
+
+                p = os * p;
+
+                if(!std::isnan(p.translation().z()) && p.translation().z() > min_dist) {
+                    min_dist = p.translation().z();
                 }
             }
             catch (...) {}

@@ -11,6 +11,8 @@
 #include <QStringListModel>
 #include <QStringList>
 
+#include <robot_rodeo_gym/SetCameraFollow.h>
+
 #include <rqt_gui_cpp/plugin.h>
 #include <pluginlib/class_list_macros.h>
 #include <ui_rqt_score.h>
@@ -19,6 +21,7 @@
 #include <std_msgs/Int64.h>
 #include <sensor_msgs/Imu.h>
 #include <sensor_msgs/Joy.h>
+#include <std_srvs/Empty.h>
 
 namespace robot_rodeo_gym {
 
@@ -32,8 +35,12 @@ namespace robot_rodeo_gym {
             ros::Time start;
             ros::Time end;
             std::vector<sensor_msgs::Imu> imu;
+            std::vector<double> imu_acc_x;
+            std::vector<double> imu_acc_z;
+            std::vector<double> imu_acc_y;
+
             std::vector<sensor_msgs::Joy> joy;
-            std::vector<std_msgs::Float64> distance_from_ground;
+            std::vector<double> distance_from_ground;
         };
 
 
@@ -45,6 +52,8 @@ namespace robot_rodeo_gym {
 
     private:
         std::string node_name;
+        std::string robot_name;
+        std::string arena_name;
 
         Ui::RqtScore ui_;
         QWidget* widget_;
@@ -55,7 +64,7 @@ namespace robot_rodeo_gym {
 
         std::shared_ptr<ros::Subscriber> imu_sub, joy_sub, distance_from_ground_sub, obstacle_id_sub;
         std::mutex data_mtx;
-        std_msgs::Int64 obstacle_id_data;
+        int obstacle_id_data;
 
         bool started = false;
         ros::Time start_time = ros::Time::now();
@@ -81,11 +90,25 @@ namespace robot_rodeo_gym {
         void stop();
         void clear();
 
+        robot_rodeo_gym::SetCameraFollowRequest follow_request;
+        std::string start_camera_follow_service_name, stop_camera_follow_service_name;
+        std::string reset_robot_service_name;
+
+        void start_follow();
+        void stop_follow();
+        void reset_robot();
+
+        double min_distance, normal_distance;
+        double max_acc;
+
         double sigmoid(double x, double x_min);
-
         double normalize_distance(double x);
+        double mean(const std::vector<double> &vec);
 
-        std::vector<double> find_max_bins(std::vector<double> data, int bins_count);
+        double process_joy(const sensor_msgs::Joy &joy);
+
+        int bins_count = 10;
+        void find_max_bins(const std::vector<double> &data, std::vector<double> &bins);
     };
 
 }

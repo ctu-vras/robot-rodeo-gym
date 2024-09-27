@@ -2,8 +2,19 @@ imu_topic: "/imu/data"
 joy_topic: "/joy"
 distance_from_ground_topic: "/distance_from_ground"
 obstacle_id_topic: "/obstacle_id"
+reset_robot_service_name: "/reset_robot/reset_robot"
 
 topic_timeout: 0.3 # 300 ms
+
+limits:
+  min_distance: 0.378513
+  normal_distance: 0.488
+  max_acc: 10
+
+bins_count: 10
+
+start_camera_follow_service_name: "/set_camera_follow/set_camera_follow"
+stop_camera_follow_service_name: "/set_camera_follow/stop_camera_follow"
 follow_offset:
   x: 0
   y: 2

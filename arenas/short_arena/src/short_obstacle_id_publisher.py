@@ -6,10 +6,11 @@ from std_msgs.msg import Int64
 class BoundingBoxDetector:
     def __init__(self):
         self.bounding_boxes = [
-            {'id': 0, 'x_min': -7.0, 'x_max': -5, 'y_min': -5.0, 'y_max': -3.0},
+            #{'id': 0, 'x_min': -7.0, 'x_max': -5, 'y_min': -5.0, 'y_max': -3.0},
             {'id': 1, 'x_min': -5.0, 'x_max': -2.0, 'y_min': -5.0, 'y_max': -3.0},
             {'id': 2, 'x_min': -2.0, 'x_max': 1.0, 'y_min': -5.0, 'y_max': -3.0},
             {'id': 3, 'x_min': 1.0, 'x_max': 5.0, 'y_min': -5.0, 'y_max': -3.0},
+            #{'id': 4, 'x_min': 5.0, 'x_max': 8.0, 'y_min': -5.0, 'y_max': 4.0}
         ]
 
         self.pub_bounding_box_id = rospy.Publisher('/obstacle_id', Int64, queue_size=10)

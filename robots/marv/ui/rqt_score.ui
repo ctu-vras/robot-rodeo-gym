@@ -22,6 +22,38 @@
      <item>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_12">
+         <item>
+          <widget class="QLabel" name="robot_name_label">
+           <property name="text">
+            <string>Robot</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="robot_name">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_10">
+           <property name="text">
+            <string>Arena</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="arena_name">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <item>
           <widget class="QCheckBox" name="imu_topic_checkbox">
@@ -282,7 +314,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="label_9">
+      <widget class="QLabel" name="total_score">
        <property name="text">
         <string>0</string>
        </property>
@@ -351,7 +383,7 @@
     </layout>
    </item>
    <item>
-    <widget class="QPushButton" name="reset_robot">
+    <widget class="QPushButton" name="reset_robot_push_button">
      <property name="text">
       <string>Reset Robot</string>
      </property>
