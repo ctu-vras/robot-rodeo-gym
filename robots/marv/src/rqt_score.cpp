@@ -304,7 +304,8 @@ void RqtScore::refresh(const ros::TimerEvent& event) {
 
         ros::Duration total;
 
-        std::vector<double> total_quality;
+        std::vector<double> total_quality, shock_quality, distance_quality;
+
 
         for (const auto &obstacle_p : obstacles) {
             const Obstacle &obstacle = obstacle_p.second;
@@ -345,27 +346,32 @@ void RqtScore::refresh(const ros::TimerEvent& event) {
                 }
 
                 normalized_shock = 1.0 - sigmoid(mean(shock), max_acc); // Invert logic
+                if(normalized_shock > 1.0) normalized_shock = 1.0; // Never should happened
+                if(normalized_shock < 0.0) normalized_shock = 0.0; // Never should happened
             }
 
-            /*
-             * TODO fix distance
             if(obstacle.distance_from_ground.size() > bins_count) {
                 find_max_bins(obstacle.distance_from_ground, distance_max);
 
                 normalized_distance = normalize_distance(mean(distance_max));
+                if(normalized_distance > 1.0) normalized_distance = 1.0; // Never should happened
+                if(normalized_distance < 0.0) normalized_distance = 0.0; // Never should happened
             }
-             */
 
 
-            //double quality = (normalized_distance + normalized_shock) / 2.0;
-            double quality = normalized_shock;
+
+            double quality = (normalized_distance + normalized_shock) / 2.0;
+
             total_quality.push_back(quality);
+            shock_quality.push_back(normalized_shock);
+            distance_quality.push_back(normalized_distance);
 
             ss << "Obstacle " << obstacle.id << ": Duration: "
                << std::setw(2) << std::setfill('0') << ((duration.sec % 3600) / 60) << ":"
                << std::setw(2) << std::setfill('0') << (duration.sec % 60)
-               //<< "; Operation: " << static_cast<int>(operations) << "; Quality: " << std::setprecision(2) << quality;
-                    << "; Operation: " << static_cast<int>(operations) << "; Quality: " << static_cast<int>(quality * 100);
+                    << "; Shock Score: " << static_cast<int>(normalized_shock * 100)
+                    << "; Distance Score: " << static_cast<int>(normalized_distance * 100)
+                    << "; Score: " << static_cast<int>(quality * 100) << "; Operation: " << static_cast<int>(operations) ;
 
             QString item = QString::fromStdString(ss.str());
 
@@ -384,9 +390,16 @@ void RqtScore::refresh(const ros::TimerEvent& event) {
         ui_.experiment_duration_lable->setText(QString::fromStdString(ss.str()));
 
         std::stringstream total_quality_ss;
-        //total_quality_ss << std::setprecision(2) << mean(total_quality) << std::endl;
         total_quality_ss << static_cast<int>(100 * mean(total_quality)) << std::endl;
         ui_.total_score->setText(QString::fromStdString(total_quality_ss.str()));
+
+        std::stringstream distance_quality_ss;
+        distance_quality_ss << static_cast<int>(100 * mean(distance_quality)) << std::endl;
+        ui_.distance_score->setText(QString::fromStdString(distance_quality_ss.str()));
+
+        std::stringstream shock_quality_ss;
+        shock_quality_ss << static_cast<int>(100 * mean(shock_quality)) << std::endl;
+        ui_.shock_score->setText(QString::fromStdString(shock_quality_ss.str()));
     }
 
     // Assuming 'listView' is a pointer to your QListView

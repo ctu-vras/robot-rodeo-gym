@@ -30,17 +30,19 @@ std::shared_ptr<realtime_tools::RealtimePublisher<std_msgs::Float64>> distance_p
 std::shared_ptr<realtime_tools::RealtimePublisher<visualization_msgs::MarkerArray>> points_pub;
 tf2_ros::Buffer tf_buffer;
 
-Eigen::Affine3d& get_transform(const std::string &target_frame, const std::string &source_frame, Eigen::Affine3d &transform) {
+bool get_transform(const std::string &target_frame, const std::string &source_frame, Eigen::Affine3d &transform) {
     try {
         auto fl = tf_buffer.lookupTransform( target_frame, source_frame, ros::Time(0));
         tf::transformMsgToEigen(fl.transform, transform);
+
+        return true;
     }
     catch (tf2::TransformException &ex) {
         ROS_ERROR_STREAM_NAMED(NODE_NAME, "Get transform error. Target frame: " << target_frame << ", source frame: " << source_frame << ", exception: " << ex.what() << ". Returning identity transform.");
         transform = Eigen::Affine3d::Identity();
-    }
 
-    return transform;
+        return false;
+    }
 }
 
 void height_map_callback(grid_map_msgs::GridMapConstPtr grid_map) {
@@ -58,10 +60,16 @@ void height_map_callback(grid_map_msgs::GridMapConstPtr grid_map) {
     auto l = gm.getLength();
 
     Eigen::Affine3d transform, os, offset;
-    get_transform("world", "base_link", transform);
-    get_transform("os_sensor", "world", os);
+
+    if(!get_transform("world", "base_link", transform) ||
+       !get_transform("os_sensor", "world", os)) {
+        ROS_WARN_NAMED(NODE_NAME, "Skipping because obtaining transform failed.");
+        return;
+    }
 
     double min_dist = -std::numeric_limits<double>::max();
+
+    int i = 0;
 
     for(int x = 0; x < 10; x++) {
         for(int y = 0; y < 8; y++) {
@@ -81,8 +89,11 @@ void height_map_callback(grid_map_msgs::GridMapConstPtr grid_map) {
 
                 p = os * p;
 
-                if(!std::isnan(p.translation().z()) && p.translation().z() > min_dist) {
-                    min_dist = p.translation().z();
+                if(!std::isnan(p.translation().z())) {
+
+                    if(p.translation().z() > min_dist) {
+                        min_dist = p.translation().z();
+                    }
 
                     marker.type = visualization_msgs::Marker::SPHERE;
                     marker.scale.x = 0.05;
@@ -104,7 +115,11 @@ void height_map_callback(grid_map_msgs::GridMapConstPtr grid_map) {
                     markers.markers.push_back(marker);
                 }
             }
-            catch (...) {}
+            catch (std::out_of_range exception) {
+                ROS_INFO_STREAM_NAMED(NODE_NAME, "Exception: " << i+1 << "/" << 10 * 8 << ". Ex: " << exception.what() << ". Position x: " << pos.x() << ", y: " << pos.y());
+            }
+
+            i++;
         }
     }
 
@@ -114,7 +129,7 @@ void height_map_callback(grid_map_msgs::GridMapConstPtr grid_map) {
         distance_pub->unlockAndPublish();
     }
 
-    if(points_pub->trylock()) {
+    if(points_pub->trylock() && markers.markers.size() > 0) {
         points_pub->msg_.markers.clear();
         points_pub->msg_.markers.resize(markers.markers.size());
         std::copy(markers.markers.begin(), markers.markers.end(), points_pub->msg_.markers.begin());
