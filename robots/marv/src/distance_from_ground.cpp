@@ -27,6 +27,7 @@
 #define NODE_NAME ("DistanceFromGround")
 
 std::shared_ptr<realtime_tools::RealtimePublisher<std_msgs::Float64>> distance_pub;
+std::shared_ptr<realtime_tools::RealtimePublisher<visualization_msgs::MarkerArray>> points_pub;
 tf2_ros::Buffer tf_buffer;
 
 Eigen::Affine3d& get_transform(const std::string &target_frame, const std::string &source_frame, Eigen::Affine3d &transform) {
@@ -82,6 +83,25 @@ void height_map_callback(grid_map_msgs::GridMapConstPtr grid_map) {
 
                 if(!std::isnan(p.translation().z()) && p.translation().z() > min_dist) {
                     min_dist = p.translation().z();
+
+                    marker.type = visualization_msgs::Marker::SPHERE;
+                    marker.scale.x = 0.05;
+                    marker.scale.y = 0.05;
+                    marker.scale.z = 0.05;
+
+                    marker.id = markers.markers.size();
+                    marker.header.seq = grid_map->info.header.seq;
+                    marker.header.stamp = ros::Time::now();
+                    marker.header.frame_id = "os_sensor";
+
+                    marker.color.a = 1;
+                    marker.pose.orientation.w = 1;
+
+                    marker.pose.position.x = p.translation().x();
+                    marker.pose.position.y = p.translation().y();
+                    marker.pose.position.z = p.translation().z();
+
+                    markers.markers.push_back(marker);
                 }
             }
             catch (...) {}
@@ -92,6 +112,14 @@ void height_map_callback(grid_map_msgs::GridMapConstPtr grid_map) {
         distance_pub->msg_.data = min_dist;
 
         distance_pub->unlockAndPublish();
+    }
+
+    if(points_pub->trylock()) {
+        points_pub->msg_.markers.clear();
+        points_pub->msg_.markers.resize(markers.markers.size());
+        std::copy(markers.markers.begin(), markers.markers.end(), points_pub->msg_.markers.begin());
+
+        points_pub->unlockAndPublish();
     }
 }
 
@@ -110,6 +138,7 @@ int main(int argc, char** argv) {
     auto tf_listener = std::make_shared<tf2_ros::TransformListener>(tf_buffer);
 
     distance_pub = std::make_shared<realtime_tools::RealtimePublisher<std_msgs::Float64>>(*nh, "/distance_from_ground", 1);
+    points_pub = std::make_shared<realtime_tools::RealtimePublisher<visualization_msgs::MarkerArray>>(*nh, "/distance_from_ground_points", 1);
 
     ros::Subscriber elevation_map_sub = nh->subscribe("/elevation_mapping/elevation_map_raw", 1000, height_map_callback);
 
