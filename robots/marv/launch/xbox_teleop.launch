@@ -1,0 +1,18 @@
+<launch>
+    <arg name="device" default="/dev/input/js1"/>
+
+    <node name="joy_node" pkg="joy" type="joy_node" output="screen">
+        <rosparam param="dev" subst_value="true">$(arg device)</rosparam>
+        <param name="autorepeat_rate" value="10" />
+    </node>
+
+    <node name="MarvTeleop" pkg="marv_teleop" type="marv_joy" output="screen">
+        <rosparam command="load" file="$(find marv_teleop)/config/buttons_mapping.yaml"/>
+        <rosparam command="load" file="$(find marv_teleop)/config/limits.yaml"/>
+        <rosparam command="load" file="$(find marv_gazebo)/config/marv_teleop_output_mapping.yaml"/>
+    </node>
+
+    <!--<node name="MarvTeleop" pkg="marv_teleop" type="marv_joy" output="screen">
+        <remap from="cmd_vel" to="marv_devel/cmd_vel" />
+    </node>-->
+</launch>

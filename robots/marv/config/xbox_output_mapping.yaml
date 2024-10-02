@@ -1,0 +1,31 @@
+# Copyright (c) JettyVision s.r.o in Prague  - All Rights Reserved
+# Created on: 21.5.2021
+#     Author: Valentyn Cihala <cihala@jettyvision.cz>
+
+front_left_flipper:
+  topic: "/flippers_cmd_pos_rel/front_left"
+  name: "front_left_flipper_j"
+  inverted: True
+front_right_flipper:
+  topic: "/flippers_cmd_pos_rel/front_right"
+  name: "front_right_flipper_j"
+  inverted: True
+rear_left_flipper:
+  topic: "/flippers_cmd_pos_rel/rear_left"
+  name: "rear_left_flipper_j"
+  inverted: False
+rear_right_flipper:
+  topic: "/flippers_cmd_pos_rel/rear_right"
+  name: "rear_right_flipper_j"
+  inverted: False
+
+brake_duration: 1
+robot_move: "/cmd_vel"
+
+clear_fault_enabled: False
+clear_fault_service_name: "/marv/clear_errors"
+
+reboot_enabled: False
+reboot_service_name: "reboot_odrive"
+
+joy_debug: False 
