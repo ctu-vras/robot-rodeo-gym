@@ -16,7 +16,7 @@
   <property name="windowTitle">
    <string>Robot rodeo score</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0,0,0,0,0,0">
+  <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0,0,0,0,0,0,0">
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <item>
@@ -303,6 +303,38 @@
        </property>
       </widget>
      </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_11">
+     <item>
+      <widget class="QLabel" name="label_9">
+       <property name="text">
+        <string>Shock Total Score:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="shock_score">
+       <property name="text">
+        <string>0</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_11">
+       <property name="text">
+        <string>Distance Total Score: </string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="distance_score">
+       <property name="text">
+        <string>0</string>
+       </property>
+      </widget>
+     </item>
      <item>
       <widget class="QLabel" name="label_8">
        <property name="text">
@@ -319,7 +351,7 @@
         <string>0</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
        </property>
       </widget>
      </item>
