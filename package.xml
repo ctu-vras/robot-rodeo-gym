@@ -29,7 +29,16 @@
   <depend>eigen_conversions</depend>
   <depend>std_msgs</depend>
   <depend>geometry_msgs</depend>
+  <depend>grid-map-costmap-2d</depend>
+  <depend>geometry2</depend>
 
+  <depend>octomap-msgs</depend>
+
+  <depend>sensor-filters</depend>
+
+  <depend>robot-body-filter</depend>
+
+  <depend>joy</depend>
   <export>
     <rqt_gui plugin="${prefix}/plugin.xml"/>
   </export>

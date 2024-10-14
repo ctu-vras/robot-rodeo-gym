@@ -1,0 +1,6 @@
+- git: {local-name: grid_map, uri: 'https://github.com/anybotics/grid_map.git'}
+- git: {local-name: elevation_mapping, uri: 'https://github.com/anybotics/elevation_mapping.git'}
+- git: {local-name: kindr, uri: 'https://github.com/ANYbotics/kindr.git'}
+- git: {local-name: kindr_ros, uri: 'https://github.com/ANYbotics/kindr_ros.git'}
+- git: {local-name: message_logger, uri: 'https://github.com/ANYbotics/message_logger.git'}
+- git: {local-name: ros_gz, uri: 'https://github.com/gazebosim/ros_gz.git', version: noetic}
