@@ -63,7 +63,7 @@ void RqtScore::shutdownPlugin()
 void RqtScore::start() {
     std::lock_guard<std::mutex> lock(data_mtx);
 
-    obstacles.clear();
+    //obstacles.clear();
 
     start_time = ros::Time::now();
     started = true;
@@ -337,9 +337,9 @@ void RqtScore::refresh(const ros::TimerEvent& event) {
             double normalized_distance = 1;
 
             if(obstacle.imu.size() > bins_count) {
-                find_max_bins(obstacle.imu_acc_x, lin_acc_x_max);
-                find_max_bins(obstacle.imu_acc_y, lin_acc_y_max);
-                find_max_bins(obstacle.imu_acc_z, lin_acc_z_max);
+                find_bins(obstacle.imu_acc_x, lin_acc_x_max);
+                find_bins(obstacle.imu_acc_y, lin_acc_y_max);
+                find_bins(obstacle.imu_acc_z, lin_acc_z_max);
 
                 for(int i = 0; i < bins_count; i++) {
                     shock[i] = std::sqrt(std::pow(lin_acc_x_max[i], 2) + std::pow(lin_acc_y_max[i], 2) + std::pow(lin_acc_z_max[i], 2));
@@ -351,10 +351,16 @@ void RqtScore::refresh(const ros::TimerEvent& event) {
             }
 
             if(obstacle.distance_from_ground.size() > bins_count) {
-                find_max_bins(obstacle.distance_from_ground, distance_max);
+                find_bins(obstacle.distance_from_ground, distance_max);
 
-                normalized_distance = normalize_distance(mean(distance_max));
-                if(normalized_distance > 1.0) normalized_distance = 1.0; // Never should happened
+               
+		for(int i = 0; i < 10; i++) {
+			distance_max[i] = 1 - normalize_distance(distance_max[i]);
+		}
+
+		normalized_distance = mean(distance_max);
+
+		if(normalized_distance > 1.0) normalized_distance = 1.0; // Never should happened
                 if(normalized_distance < 0.0) normalized_distance = 0.0; // Never should happened
             }
 
@@ -427,11 +433,11 @@ void RqtScore::refresh(const ros::TimerEvent& event) {
         ui_.clear_push_button->setEnabled(!data.empty());
     } else {
         if(imu_timeout || joy_timeout || distance_from_ground_timeout || obstacle_id_timeout) {
-            QMessageBox::information(nullptr, "Alert", "Missing topic data. Stopping...");
-            {
+	    {
                 std::lock_guard<std::mutex> lock(data_mtx);
                 started = false;
             }
+            QMessageBox::information(nullptr, "Alert", "Missing topic data. Stopping...");
         }
 
         ui_.start_push_button->setEnabled(false);
@@ -461,7 +467,7 @@ double RqtScore::normalize_distance(double x) {
     return std::max((x - normal_distance) / (min_distance - normal_distance), 0.0);
 }
 
-void RqtScore::find_max_bins(const std::vector<double> &data, std::vector<double> &bins) {
+void RqtScore::find_bins(const std::vector<double> &data, std::vector<double> &bins, bool min) {
     int l = data.size();
     double bin_size = static_cast<double>(l) / bins_count;
 
@@ -472,7 +478,8 @@ void RqtScore::find_max_bins(const std::vector<double> &data, std::vector<double
         int end_id = std::min((i + 1) * id_offset, l - 1);
         if(end_id >= data.size()) end_id = data.size() - 1;
 
-        bins[i] = *std::max_element(data.begin() + start_id, data.begin() + end_id);
+	if(min) bins[i] = *std::min_element(data.begin() + start_id, data.begin() + end_id);
+	else bins[i] = *std::max_element(data.begin() + start_id, data.begin() + end_id);
     }
 }
 

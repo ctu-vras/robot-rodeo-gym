@@ -22,21 +22,21 @@
 
     <!-- Colon-separated list of payload Xacro files to include. Whitespace around is ignored. -->
     <xacro:arg name="payload_xacros" default="
-      $(find marv_description)/urdf/mobilicom.xacro :
-      $(find marv_description)/urdf/basler_cameras.xacro :
-      $(find marv_description)/urdf/boson_thermocam.xacro :
-      $(find marv_description)/urdf/mote_deployer.xacro :
-      $(find marv_description)/urdf/ouster_lidar.xacro :
-      $(find marv_description)/urdf/tfmini_plus_lidar.xacro
+	    $(find robot_rodeo_gym)/robots/marv/urdf/mobilicom.xacro :
+	    $(find robot_rodeo_gym)/robots/marv/urdf/basler_cameras.xacro :
+	    $(find robot_rodeo_gym)/robots/marv/urdf/boson_thermocam.xacro :
+	    $(find robot_rodeo_gym)/robots/marv/urdf/mote_deployer.xacro :
+	    $(find robot_rodeo_gym)/robots/marv/urdf/ouster_lidar.xacro :
+      $(find robot_rodeo_gym)/robots/marv/urdf/tfmini_plus_lidar.xacro
     " />
 
-    <xacro:include filename="$(find marv_description)/urdf/mobilicom.xacro" />
-    <xacro:include filename="$(find marv_description)/urdf/basler_cameras.xacro" />
-    <xacro:include filename="$(find marv_description)/urdf/boson_thermocam.xacro" />
-    <xacro:include filename="$(find marv_description)/urdf/mote_deployer.xacro" />
-    <xacro:include filename="$(find marv_description)/urdf/ouster_lidar.xacro" />
-    <xacro:include filename="$(find marv_description)/urdf/direction_lidar.xacro" />
-    <xacro:include filename="$(find marv_description)/urdf/tfmini_plus_lidar.xacro" />
+    <xacro:include filename="$(find robot_rodeo_gym)/robots/marv/urdf/mobilicom.xacro" />
+    <xacro:include filename="$(find robot_rodeo_gym)/robots/marv/urdf/basler_cameras.xacro" />
+    <xacro:include filename="$(find robot_rodeo_gym)/robots/marv/urdf/boson_thermocam.xacro" />
+    <xacro:include filename="$(find robot_rodeo_gym)/robots/marv/urdf/mote_deployer.xacro" />
+    <xacro:include filename="$(find robot_rodeo_gym)/robots/marv/urdf/ouster_lidar.xacro" />
+    <xacro:include filename="$(find robot_rodeo_gym)/robots/marv/urdf/direction_lidar.xacro" />
+    <xacro:include filename="$(find robot_rodeo_gym)/robots/marv/urdf/tfmini_plus_lidar.xacro" />
 
     <xacro:arg default="0.3600" name="rover_bodyWidth"/>
     <xacro:arg default="0.6000" name="rover_bodyLength"/>
@@ -154,7 +154,7 @@
 
     <!-- MACRO SPECIFICATIONS -->
 
-    <xacro:include filename="$(find marv_description)/urdf/utils.xacro" />
+    <xacro:include filename="$(find robot_rodeo_gym)/robots/marv/urdf/utils.xacro" />
 
     <!-- SPECIAL LINKS -->
 
@@ -601,7 +601,7 @@
     <xacro:if value="$(arg has_kinova)">
 
         <xacro:include filename="$(find kortex_description)/arms/$(arg kinova_arm)/$(arg kinova_dof)dof/urdf/$(arg kinova_arm)_macro.xacro"/>
-        <xacro:include filename="$(find marv_description)/urdf/kortex_robot.xacro" />
+        <xacro:include filename="$(find robot_rodeo_gym)/robots/marv/urdf/kortex_robot.xacro" />
 
         <joint name="$(arg kinova_prefix)joint_base" type="fixed">
               <origin xyz="$(arg kinova_xyz)" rpy="$(arg kinova_rpy)" />
@@ -776,7 +776,7 @@
 
     <!-- LIGHTS -->
 
-    <xacro:include filename="$(find marv_description)/urdf/lights.xacro" />
+    <xacro:include filename="$(find robot_rodeo_gym)/robots/marv/urdf/lights.xacro" />
 
     <gazebo reference="$(arg prefix)base_link">
         <xacro:led_stripe name="light_left" range="30" linear="0.2" constant="0.1" quadratic="0.0025"

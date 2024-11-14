@@ -67,6 +67,7 @@ namespace robot_rodeo_gym {
         int obstacle_id_data;
 
         bool started = false;
+	bool paused = false;
         ros::Time start_time = ros::Time::now();
 
         std::map<int, Obstacle> obstacles;
@@ -108,7 +109,7 @@ namespace robot_rodeo_gym {
         double process_joy(const sensor_msgs::Joy &joy);
 
         int bins_count = 10;
-        void find_max_bins(const std::vector<double> &data, std::vector<double> &bins);
+        void find_bins(const std::vector<double> &data, std::vector<double> &bins, bool min=false);
     };
 
 }

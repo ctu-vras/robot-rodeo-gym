@@ -1,11 +1,12 @@
 input_sources:
-  ground_truth_cloud: # A name to identify the input source
-    type: pointcloud # Supported types: pointcloud
-    topic: /points_filtered
-    queue_size: 1
-    publish_on_update: true # Whether to publish the elevation map after a callback from this source.
-    sensor_processor:
-      type: perfect
+    point_cloud: # A name to identify the input source
+      type: pointcloud # Supported types: pointcloud
+      topic: "/points_cropped"
+      queue_size: 1
+      publish_on_update: true # Whether to publish the elevation map after a callback from this source.
+      sensor_processor:
+         type: perfect 
+
 map_frame_id: "world"
 robot_base_frame_id: "base_link"
 robot_pose_with_covariance_topic: ""
@@ -15,3 +16,4 @@ track_point_y: 0.0
 track_point_z: 0.0
 fused_map_publishing_rate: 20
 min_update_rate: 20
+sensor_frame_id: "os_sensor"

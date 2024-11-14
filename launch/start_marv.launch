@@ -35,7 +35,7 @@
     <include file="$(find robot_rodeo_gym)/robots/marv/launch/lidar_3d_filter.launch">
         <arg name="robot" value="$(arg robot_name)"/>
     </include>
-    <node pkg="robot_rodeo_gym" name="point_cloud_cropping" type="crop_pointcloud" args="/points /points_cropped -100 -100 -5 100 100 0.5"/>
+    <node pkg="robot_rodeo_gym" name="point_cloud_cropping" type="crop_pointcloud" args="/points_filtered /points_cropped -100 -100 -5 100 100 0.5"/>
 
     <!-- Bridge for imu from gazebo to ROS -->
     <include file="$(find robot_rodeo_gym)/launch/gazebo_bridge/imu.launch">
@@ -70,7 +70,7 @@
     <include file="$(find robot_rodeo_gym)/robots/marv/launch/elevation_mapping.launch"/>
 
     <!-- Teleop -->
-    <!-- TODO Add marv teleop -->
+    <include file="$(find robot_rodeo_gym)/robots/marv/launch/xbox_teleop.launch"/>
 
     <!-- Flipper controller for distance from ground -->
     <node name="marv_compute_distance_from_ground" pkg="robot_rodeo_gym" type="marv_compute_distance_from_ground" respawn="true" respawn_delay="5"/>
