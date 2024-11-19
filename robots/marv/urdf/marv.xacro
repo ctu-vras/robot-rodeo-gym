@@ -154,7 +154,7 @@
 
     <!-- MACRO SPECIFICATIONS -->
 
-    <xacro:include filename="$(find robot_rodeo_gym)/robots/marv/urdf/utils.xacro" />
+    <xacro:include filename="$(find marv_description)/urdf/utils.xacro" />
 
     <!-- SPECIAL LINKS -->
 
@@ -601,7 +601,7 @@
     <xacro:if value="$(arg has_kinova)">
 
         <xacro:include filename="$(find kortex_description)/arms/$(arg kinova_arm)/$(arg kinova_dof)dof/urdf/$(arg kinova_arm)_macro.xacro"/>
-        <xacro:include filename="$(find robot_rodeo_gym)/robots/marv/urdf/kortex_robot.xacro" />
+        <xacro:include filename="$(find marv_description)/urdf/kortex_robot.xacro" />
 
         <joint name="$(arg kinova_prefix)joint_base" type="fixed">
               <origin xyz="$(arg kinova_xyz)" rpy="$(arg kinova_rpy)" />
@@ -776,7 +776,7 @@
 
     <!-- LIGHTS -->
 
-    <xacro:include filename="$(find robot_rodeo_gym)/robots/marv/urdf/lights.xacro" />
+    <xacro:include filename="$(find marv_description)/urdf/lights.xacro" />
 
     <gazebo reference="$(arg prefix)base_link">
         <xacro:led_stripe name="light_left" range="30" linear="0.2" constant="0.1" quadratic="0.0025"
