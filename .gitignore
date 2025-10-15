@@ -6,3 +6,4 @@
 *.bag
 *.swp
 *.egg-info*
+*.vscode/*
